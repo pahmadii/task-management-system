@@ -7,15 +7,15 @@ const userController = require('../controllers/userController');
 router.use(authorizeRoles('admin'));
 
 // دریافت لیست همه کاربران
-router.get('/users', userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // بروزرسانی کامل اطلاعات کاربر
-router.put('/users/:id', userController.updateUser);
+router.put('/:id', userController.updateUser);
 
 // تغییر نقش کاربر
-router.patch('/users/:id/role', userController.changeUserRole);
+router.patch('/:id/role', userController.changeUserRole);
 
 // حذف کاربر و تمام تسک‌های او
-router.delete('/users/:id', userController.deleteUser);
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router;
