@@ -2,14 +2,14 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
-const adminRoutes = require('./routes/adminRoutes');
+const userRoutes = require('./routes/userRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/users',userRoutes)
 
 app.use(errorMiddleware);
 
