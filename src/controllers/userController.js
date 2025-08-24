@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const Task = require('../models/taskModel');
+const sendResponse = require("../utils/response");
 
 
 
@@ -11,7 +12,7 @@ const userController = {
       const users = await User.findAll({ attributes: { exclude: ['password'] } });
       return sendResponse(res, 200, 'Users retrieved', users);
     } catch (err) {
-      return handleError(res, err);
+    throw err;
     }
   },
 
@@ -25,7 +26,7 @@ const userController = {
       await user.update({ username, email, phone });
       return sendResponse(res, 200, 'User updated', user);
     } catch (err) {
-      return handleError(res, err);
+      throw err;
     }
   },
 
@@ -41,7 +42,7 @@ const userController = {
       await user.update({ role });
       return sendResponse(res, 200, 'User role updated', user);
     } catch (err) {
-      return handleError(res, err);
+      throw err;
     }
   },
 
@@ -56,7 +57,7 @@ const userController = {
       await user.destroy();
       return sendResponse(res, 200, 'User and their tasks deleted');
     } catch (err) {
-      return handleError(res, err);
+      throw err;
     }
   }
 
