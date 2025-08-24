@@ -1,39 +1,79 @@
-    const User = require('../models/userModel');
-    const bcrypt = require('bcrypt');
-    const generateToken = require('../utils/generateToken');
-    const jwt = require('jsonwebtoken');
+  const User = require("../models/userModel");
+  const bcrypt = require("bcrypt");
+  const generateToken = require("../utils/generateToken");
+  const jwt = require("jsonwebtoken");
+  const { Op } = require("sequelize");
+  const sendResponse = require("../utils/response");
 
+  const authController = {
+    // ثبت‌نام کاربر
+    register: async (req, res) => {
+      try {
+        const { username, email, phone, password } = req.body;
 
-    exports.register = async (req, res, next) => {
-        try {
-            const { username, email, phone, password } = req.body;
-
+        // بررسی تکراری بودن username, email و phone
         
-            const existingUser = await User.findOne({ where: { username } });
-            if(existingUser) return res.status(400).json({ message: 'Username already exists' });
+        const existingUser = await User.findOne({
+          where: {
+            [Op.or]: [{ username }, { email }, { phone }],
+          },
+        });
 
-        
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            const user = await User.create({ username, email, phone, password: hashedPassword });
-            res.status(201).json({ message: 'User registered successfully', user });
-        } catch (err) {
-            next(err);
+        if (existingUser) {
+          if (existingUser.username === username)
+            return res.status(400).json({ message: "Username already exists" });
+          if (existingUser.email === email)
+            return res.status(400).json({ message: "Email already exists" });
+          if (existingUser.phone === phone)
+            return res
+              .status(400)
+              .json({ message: "Phone number already exists" });
         }
-    };
 
-    exports.login = async (req, res, next) => {
-        try {
-            const { username, password } = req.body;
-            const user = await User.findOne({ where: { username } });
-            if(!user) return res.status(400).json({ message: 'User not found' });
+        // هش کردن پسورد
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-            const match = await bcrypt.compare(password, user.password);
-            if(!match) return res.status(400).json({ message: 'Incorrect password' });
+        const user = await User.create({
+          username,
+          email,
+          phone,
+          password: hashedPassword,
+        });
+        return sendResponse(res, 201, "User registered successfully", {
+          id: user.id,
+          username,
+          email,
+          phone,
+          role: user.role,
+        });
+      } catch (err) {
+        throw err;
+      }
+    },
 
-            const token = jwt.sign({ id: user.id, role: user.role },process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.json({ message: 'Login successful', token });
-        } catch (err) {
-            next(err);
-        }
-    };
+    // ورود کاربر
+    login: async (req, res) => {
+      try {
+        const { username, password } = req.body;
+
+        const user = await User.findOne({ where: { username } });
+        if (!user) return sendResponse(res, 400, "User not found");
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) return sendResponse(res, 400, "Incorrect password");
+
+        // ساخت توکن JWT
+        const token = jwt.sign(
+          { id: user.id, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" }
+        );
+
+        return sendResponse(res, 200, "Login successful", { token });
+      } catch (err) {
+       throw err;
+      }
+    },
+  };
+
+  module.exports = authController;
