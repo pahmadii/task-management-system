@@ -2,13 +2,13 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const { fileTypeFromFile } = require("file-type");
-const { FILE_TYPES, MAX_FILE_SIZE } = require("../utils/constants");
+const { FILE_TYPES, MAX_FILE_SIZE,UPLOAD_DIR } = require("../utils/constants");
 
-if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, UPLOAD_DIR);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
