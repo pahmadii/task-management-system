@@ -13,18 +13,19 @@ const sequelize = new Sequelize(
   }
 );
 
-
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('Database connected successfully...');
-     await sequelize.sync({ alter: true });
-    console.log('All tables synced successfully!');
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({ alter: true });
+      console.log('All tables synced successfully!');
+    }
   } catch (err) {
-    console.error(' Unable to connect to the database:', err);
+    console.error('Unable to connect to the database:', err);
   }
 })();
 
 module.exports = sequelize;
+
 
 
