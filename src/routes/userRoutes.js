@@ -1,21 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const authorizeRoles = require('../middleware/authorizeRoles');
+const { adminUpdateUserValidation,changeRoleValidation} = require('../middleware/validators');
 const userController = require('../controllers/userController');
 
-// همه مسیرها فقط برای ادمین
-router.use(authorizeRoles('admin'));
+
 
 // دریافت لیست همه کاربران
-router.get('/', userController.getAllUsers);
-
+router.get('/', authorizeRoles('admin'), userController.getAllUsers);
 // بروزرسانی کامل اطلاعات کاربر
-router.put('/:id', userController.updateUser);
-
+router.put('/:id', authorizeRoles('admin'), adminUpdateUserValidation, userController.updateUser);
 // تغییر نقش کاربر
-router.patch('/:id/role', userController.changeUserRole);
+router.patch('/:id/role', authorizeRoles('admin'), changeRoleValidation, userController.changeUserRole);
 
 // حذف کاربر و تمام تسک‌های او
-router.delete('/:id', userController.deleteUser);
+router.delete('/:id', authorizeRoles('admin'), userController.deleteUser);
+
 
 module.exports = router;
