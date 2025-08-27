@@ -5,10 +5,18 @@ const fs = require("fs");
 const logger = require("../utils/logger");
 
 const taskController = {
+  
+  //ساخت تسک
+
   createTask: async (req, res) => {
     const { name, description } = req.body;
     const userId = req.user.id;
-    const attachment = req.file ? `uploads/${req.file.filename}` : null;
+
+    // مسیر نسبی ذخیره می‌کنیم نه مسیر کامل
+
+    const attachment = req.file
+      ? path.join("uploads", req.file.filename)
+      : null;
 
     const task = await Task.create({
       name,
@@ -19,10 +27,11 @@ const taskController = {
 
     logger.info(
       `Task created by user: ${userId}, Task: ${task.name}, ID: ${task.id}`
-    ); // لاگ اطلاعاتی
-
+    );
     return sendResponse(res, 201, "Task created", task);
   },
+
+  // بروزرسانی تسک
 
   updateTask: async (req, res) => {
     const { name, description } = req.body;
@@ -32,23 +41,25 @@ const taskController = {
     if (!task) return sendResponse(res, 404, "Task not found or unauthorized");
 
     let attachment = task.attachment;
+
     if (req.file) {
-      if (
-        task.attachment &&
-        fs.existsSync(path.join(__dirname, "..", task.attachment))
-      ) {
-        fs.unlinkSync(path.join(__dirname, "..", task.attachment));
+      // استفاده از مسیر نسبی برای فایل جدید
+
+      if (task.attachment) {
+        const oldFilePath = path.join(__dirname, "..", task.attachment); // مسیر کامل فایل قبلی
+        if (fs.existsSync(oldFilePath)) fs.unlinkSync(oldFilePath);
       }
-      attachment = `uploads/${req.file.filename}`;
+      attachment = path.join("uploads", req.file.filename); // مسیر نسبی فایل جدید
     }
+
     await task.update({ name, description, attachment });
 
     logger.info(
       `Task updated by user: ${req.user.id}, Task: ${task.name}, ID: ${task.id}`
-    ); // لاگ اطلاعاتی
-
+    );
     return sendResponse(res, 200, "Task updated", task);
   },
+  //پاک کردن تسک
 
   deleteTask: async (req, res) => {
     const task = await Task.findOne({
@@ -56,21 +67,21 @@ const taskController = {
     });
     if (!task) return sendResponse(res, 404, "Task not found or unauthorized");
 
-    if (
-      task.attachment &&
-      fs.existsSync(path.join(__dirname, "..", task.attachment))
-    ) {
-      fs.unlinkSync(path.join(__dirname, "..", task.attachment));
+    // استفاده از مسیر نسبی برای حذف فایل
+    if (task.attachment) {
+      const filePath = path.join(__dirname, "..", task.attachment);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
 
     await task.destroy();
 
     logger.info(
       `Task deleted by user: ${req.user.id}, Task ID: ${req.params.id}`
-    ); // لاگ اطلاعاتی
-
+    );
     return sendResponse(res, 200, "Task deleted");
   },
+
+  // خواندن و دریافت تسک
 
   getTask: async (req, res) => {
     const task = await Task.findOne({
@@ -78,10 +89,11 @@ const taskController = {
     });
     if (!task) return sendResponse(res, 404, "Task not found or unauthorized");
 
-    logger.info(`Task retrieved by user: ${req.user.id}, Task ID: ${task.id}`); // لاگ اطلاعاتی
-
+    logger.info(`Task retrieved by user: ${req.user.id}, Task ID: ${task.id}`);
     return sendResponse(res, 200, "Task retrieved", task);
   },
+
+  // دریافت تمام کاربران تسک
 
   getAllTasks: async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -96,8 +108,7 @@ const taskController = {
 
     logger.info(
       `Tasks retrieved by user: ${req.user.id}, Page: ${page}, Limit: ${limit}`
-    ); // لاگ اطلاعاتی
-
+    );
     return sendResponse(res, 200, "Tasks retrieved", {
       total: count,
       page,
@@ -106,6 +117,8 @@ const taskController = {
     });
   },
 
+  //دانلود تسک attachment
+
   downloadTaskAttachment: async (req, res) => {
     const task = await Task.findOne({
       where: { id: req.params.id, user_id: req.user.id },
@@ -113,16 +126,15 @@ const taskController = {
     if (!task || !task.attachment)
       return sendResponse(res, 404, "Attachment not found");
 
-    constස;
-
+    //مسیر کامل فایل از مسیر نسبی ساخته می‌شود
     const filePath = path.join(__dirname, "..", task.attachment);
+
     if (!fs.existsSync(filePath))
       return sendResponse(res, 404, "File not found");
 
     logger.info(
       `Task attachment downloaded by user: ${req.user.id}, Task ID: ${task.id}, File: ${task.attachment}`
-    ); // لاگ اطلاعاتی
-
+    );
     res.download(filePath);
   },
 };

@@ -1,0 +1,26 @@
+{"level":"info","message":"User registered: tesstuser, ID: 3","timestamp":"2025-08-27 10:34:47"}
+{"level":"info","message":"User logged in: tesstuser, ID: 3","timestamp":"2025-08-27 10:37:41"}
+{"level":"info","message":"User registered: tessstuser, ID: 4","timestamp":"2025-08-27 10:39:47"}
+{"level":"info","message":"User registered: tetuser, ID: 5","timestamp":"2025-08-27 10:41:15"}
+{"level":"info","message":"User logged in: tetuser, ID: 5","timestamp":"2025-08-27 10:43:53"}
+{"level":"info","message":"Profile updated for user: tetuser, ID: 5","timestamp":"2025-08-27 10:46:17"}
+{"level":"info","message":"Profile image uploaded for user: tetuser, ID: 5, File: uploads\\1756279018581-329687152.jpg","timestamp":"2025-08-27 10:46:58"}
+{"level":"info","message":"Profile image downloaded for user: tetuser, ID: 5, File: D:\\Task Management System\\src\\uploads\\1756279018581-329687152.jpg","timestamp":"2025-08-27 10:47:24"}
+{"level":"info","message":"Password changed for user: tetuser, ID: 5","timestamp":"2025-08-27 10:47:55"}
+{"level":"info","message":"Task created by user: 5, Task: Test Task, ID: 2","timestamp":"2025-08-27 10:48:36"}
+{"level":"info","message":"Task updated by user: 5, Task: Updated Task, ID: 2","timestamp":"2025-08-27 10:49:01"}
+{"level":"info","message":"Task retrieved by user: 5, Task ID: 2","timestamp":"2025-08-27 10:49:27"}
+{"level":"info","message":"Task retrieved by user: 5, Task ID: 2","timestamp":"2025-08-27 10:49:34"}
+{"level":"info","message":"Task retrieved by user: 5, Task ID: 2","timestamp":"2025-08-27 10:49:42"}
+{"level":"info","message":"Tasks retrieved by user: 5, Page: 1, Limit: 10","timestamp":"2025-08-27 10:49:59"}
+{"level":"info","message":"Tasks retrieved by user: 5, Page: 1, Limit: 10","timestamp":"2025-08-27 10:50:01"}
+{"level":"info","message":"Task attachment downloaded by user: 5, Task ID: 2, File: uploads\\1756279116225-183609051.pdf","timestamp":"2025-08-27 10:50:22"}
+{"level":"info","message":"Task deleted by user: 5, Task ID: 2","timestamp":"2025-08-27 10:50:46"}
+{"level":"info","message":"User registered: admminuser, ID: 6","timestamp":"2025-08-27 10:51:37"}
+{"level":"info","message":"User registered: admiinuser, ID: 7","timestamp":"2025-08-27 10:52:58"}
+{"level":"info","message":"User logged in: admiinuser, ID: 7","timestamp":"2025-08-27 10:53:59"}
+{"level":"info","message":"User role changed by admin: 7, User: adminuser, ID: 2, New Role: admin","timestamp":"2025-08-27 10:55:34"}
+{"level":"info","message":"Users retrieved by admin: 7, Page: 1, Limit: 10","timestamp":"2025-08-27 10:55:54"}
+{"level":"info","message":"User updated by admin: 7, User: tesstuser, ID: 3","timestamp":"2025-08-27 10:56:38"}
+{"level":"info","message":"User deleted by admin: 7, User: tessstuser, ID: 4","timestamp":"2025-08-27 10:57:13"}
+{"level":"info","message":"Users retrieved by admin: 7, Page: 1, Limit: 10","timestamp":"2025-08-27 10:57:28"}
